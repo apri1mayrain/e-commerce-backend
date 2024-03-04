@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
   Product.findAll({
-    include: [{model: Category}, {model: Tag}]
+    include: [{ model: Category }, { model: Tag }]
   })
   .then((products) => {
     res.json(products)
@@ -21,11 +21,11 @@ router.get('/:id', (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
   Product.findByPk(req.params.id, {
-    include: [{model: Category}, {model: Tag}]
+    include: [{ model: Category }, { model: Tag }]
   })
   .then((product) => {
     if(!product) {
-      res.json({message: 'Product ID not found.'});
+      res.json({ message: 'Product ID not found.' });
       return;
     }
     res.json(product);
@@ -37,10 +37,11 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   /* req.body should look like this...
     {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
+      product_name: "Yell Latitude 5440 Laptop",
+      price: 1099.00,
+      stock: 2,
+      category_id: 6,
+      tagIds: [6, 9]
     }
   */
   Product.create(req.body)
@@ -112,6 +113,17 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
+  Product.destroy({
+    where: { id: req.params.id }
+  })
+  .then((product => {
+    if(!product) {
+      res.json({ message: 'Product ID not found.' });
+      return;
+    }
+    res.json({ message: `Deleted product with ID: ${req.params.id}.` });
+  }))
+  .catch((err) => res.json(err));
 });
 
 module.exports = router;
