@@ -32,7 +32,21 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
+  /* req.body should look like this...
+    {
+      tag_name: "computer"
+    }
+  */
   // create a new tag
+  Tag.create(req.body)
+  .then((tag => {
+    if(!req.body.tag_name){
+      res.json({ message: 'Please provide new tag.' });
+      return;
+    }
+    res.json(tag);
+  }))
+  .catch((err => res.json(err)));
 });
 
 router.put('/:id', (req, res) => {
@@ -41,6 +55,17 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete on tag by its `id` value
+  Tag.destroy({
+    where: { id: req.params.id }
+  })
+  .then((tag => {
+    if(!tag) {
+      res.json({ message: 'Tag ID not found.' });
+      return;
+    }
+    res.json({ message: `Deleted tag with ID: ${req.params.id}.` });
+  }))
+  .catch((err) => res.json(err));
 });
 
 module.exports = router;
