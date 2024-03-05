@@ -69,7 +69,8 @@ router.put('/:id', (req, res) => {
       res.json({ message: 'Cannot update tag.' });
       return;
     }
-    res.status(200).json(tag);
+    // Notify user tag was successfully updated
+    res.status(200).json({ message: `Updated tag with ID: ${req.params.id}.` });
   }))
   .catch((err => res.json(err)))
 });
