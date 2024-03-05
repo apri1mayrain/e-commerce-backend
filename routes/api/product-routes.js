@@ -11,7 +11,8 @@ router.get('/', (req, res) => {
     include: [{ model: Category }, { model: Tag }]
   })
   .then((products) => {
-    res.json(products)
+    // Return all products
+    res.status(200).json(products)
   })
   .catch((err) => res.json(err));
 });
@@ -24,11 +25,13 @@ router.get('/:id', (req, res) => {
     include: [{ model: Category }, { model: Tag }]
   })
   .then((product) => {
+    // Notify user if product ID doesn't exist
     if(!product) {
       res.json({ message: 'Product ID not found.' });
       return;
     }
-    res.json(product);
+    // Return requested product
+    res.status(200).json(product);
   })
   .catch((err) => res.json(err));
 });
@@ -117,11 +120,13 @@ router.delete('/:id', (req, res) => {
     where: { id: req.params.id }
   })
   .then((product => {
+    // Notify user if product ID doesn't exist
     if(!product) {
       res.json({ message: 'Product ID not found.' });
       return;
     }
-    res.json({ message: `Deleted product with ID: ${req.params.id}.` });
+    // Notify user product was successfully deleted
+    res.status(200).json({ message: `Deleted product with ID: ${req.params.id}.` });
   }))
   .catch((err) => res.json(err));
 });
